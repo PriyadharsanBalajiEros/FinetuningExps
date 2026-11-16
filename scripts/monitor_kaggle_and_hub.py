@@ -43,8 +43,14 @@ def check_live_status(
                 print(
                     f"  Latest Saved Step: {st.get('global_step')} | "
                     f"Status: {st.get('status')} | "
-                    f"Best Val Loss: {st.get('best_val_loss')}"
+                    f"Best Val Loss: {st.get('best_val_loss')} | "
+                    f"Val PPL: {st.get('val_ppl')}"
                 )
+                hist = st.get("history", [])
+                if hist:
+                    print("  Recent Step History:")
+                    for h in hist[-5:]:
+                        print(f"    {h}")
         except Exception:
             print("  No checkpoint uploaded yet (kernel is currently initializing or in first 100 steps).")
 
