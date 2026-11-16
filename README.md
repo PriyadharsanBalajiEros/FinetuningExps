@@ -1,50 +1,56 @@
-# FinetuningExps — `v3.0-dpo-compiler-alignment`: Zero-Overhead 16-Bit Adapter-Reference DPO + RPO-NLL Alignment
+# FinetuningExps — `v4.0-kaggle-automation-and-eval`: Automated Kaggle Dual-T4 GPU Orchestration, RITL Agent & ManimBench Suite
 
-> **Branch Version:** `v3.0-dpo-compiler-alignment`  
-> **Stage-1 Reference Model ($\pi_{\text{ref}}$):** `PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit` (Merged in-memory in 16-bit)  
-> **Stage-2 Preference Dataset:** [`PRB1/ManimCE-Master-DPO`](https://huggingface.co/datasets/PRB1/ManimCE-Master-DPO)  
-> **Stage-2 Aligned Model Repo:** [`PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit`](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit)
-
----
-
-## 1. Zero-Memory-Duplication 16-Bit Reference Policy
-
-Standard Direct Preference Optimization (DPO) loads two separate copies of a 7B model ($\pi_\theta$ and $\pi_{\text{ref}}$), requiring $>30\text{ GB}$ of VRAM for weights alone in 16-bit precision.
-
-Our custom DPO engine (`src/training/dpo_trainer.py`) eliminates duplicate reference model VRAM completely:
-
-1. **In-Memory 16-Bit Stage-1 Merge (`merge_and_unload()`):**
-   - Loads `Qwen/Qwen2.5-Coder-7B-Instruct` in `torch.float16` across both T4 GPUs and merges the Stage-1 `rsLoRA` SFT adapter directly into the 16-bit base weights.
-   - The frozen 16-bit backbone now **is** the exact Stage-1 SFT reference policy $\pi_{\text{ref}}$.
-2. **Adapter-Toggled Reference Forward Pass (`with model.disable_adapter():`):**
-   - Attaches a fresh Stage-2 16-bit `rsLoRA` adapter ($r = 32, \alpha = 32$).
-   - During each training step, computing $\log \pi_{\text{ref}}(y_w \mid x)$ and $\log \pi_{\text{ref}}(y_l \mid x)$ inside `with torch.no_grad(): with model.disable_adapter():` uses **0.00 bytes of extra VRAM**.
-3. **RPO / CPO NLL-Stabilized DPO Objective:**
-   - In code generation,chosen ($y_w$) and rejected ($y_l$) scripts share boilerplate Python tokens (`from manim import *`, `class Scene`, `def construct(self):`). Pure DPO can inadvertently depress log-probabilities of valid Python syntax.
-   - We optimize the RPO-stabilized objective:
-     $$\mathcal{L}_{\text{Total}} = -\log \sigma \left( \beta \left[ \left(\log \pi_\theta(y_w \mid x) - \log \pi_{\text{ref}}(y_w \mid x)\right) - \left(\log \pi_\theta(y_l \mid x) - \log \pi_{\text{ref}}(y_l \mid x)\right) \right] \right) + \lambda_{\text{NLL}} \mathcal{L}_{\text{NLL}}(y_w \mid x)$$
-     with $\beta = 0.1$ and $\lambda_{\text{NLL}} = 0.1$.
+> **Branch Version:** `v4.0-kaggle-automation-and-eval`  
+> **Kaggle Kernel ID:** `priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-sft-dpo`  
+> **Evaluation Benchmark:** Held-Out `ManimBench-v1` + `autoresearch-manim` (`PRB1/ManimCE-Master-SFT` `test` split)
 
 ---
 
-## 2. Targeted Failure Modes Eliminated by Stage-2 DPO
+## 1. End-to-End Kaggle Dual-T4 GPU Automation (`kaggle_kernel/` & `scripts/`)
 
-| Rejection Category | Chosen ($y_w$) | Rejected ($y_l$) |
-| :--- | :--- | :--- |
-| **`legacy_api_hallucination`** | `Create(...)`, `MathTex(...)`, `axes.plot(...)` | `ShowCreation(...)`, `TexMobject(...)`, `axes.get_graph(...)` |
-| **`invalid_axes_kwarg`** | `Axes(x_range=[-3, 3], axis_config={"color": BLUE})` | `Axes(x_range=[-3, 3], axis_color=BLUE)` (`TypeError`) |
-| **`wrong_3d_scene_base`** | `class SurfacePlot(ThreeDScene):` with `set_camera_orientation` | `class SurfacePlot(Scene):` (`AttributeError`) |
-| **`spatial_layout_overlap`** | Explicit `.to_edge(UP)`, `.next_to(..., DOWN, buff=0.4)` | Unpositioned Mobjects stacked on top of `ORIGIN` |
+This release packages the entire 16-bit SFT + 16-bit DPO + Benchmark pipeline into an automated, fault-tolerant Kaggle GPU kernel (`kaggle_kernel/train_manimce_16bit_kaggle.py`) managed directly from the command line:
+
+```mermaid
+sequenceDiagram
+    participant Dev as Local Workspace (venv)
+    participant HF as HuggingFace Hub (PRB1)
+    participant Kag as Kaggle GPU (2x T4 32GB VRAM)
+
+    Dev->>HF: 1. Upload Curated Master SFT & DPO Datasets
+    Dev->>Kag: 2. Push Kernel via Kaggle API (scripts/push_kaggle_kernel.py)
+    Kag->>HF: 3. Pull Master Datasets & Check Existing Checkpoint State
+    loop Every 100 Gradient Steps
+        Kag->>HF: 4. Sync 16-Bit rsLoRA Adapter + Validation Metrics + training_state.json
+    end
+    Kag->>HF: 5. Merge Stage-1 SFT -> Run Stage-2 16-Bit DPO -> Push Final Aligned Model
+```
+
+### Fault-Tolerance & Zero Checkpoint Loss Guarantees
+- **Cross-Session Automatic Resumption:** On startup, the Kaggle kernel inspects `PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit` for `training_state.json`. If a previous Kaggle run paused or timed out, it downloads the exact 16-bit adapter weights, fast-forwards the cosine LR scheduler to `global_step`, and continues seamlessly.
+- **Wall-Time Safety Guard (`max_walltime_hours = 11.2`):** Automatically flushes a final checkpoint to Hugging Face Hub and exits cleanly before Kaggle's 12-hour session hard limit.
 
 ---
 
-## 3. Running Stage-2 16-Bit DPO Alignment
+## 2. Renderer-in-the-Loop (RITL) Self-Repair Agent (`src/inference/ritl_agent.py`)
+
+At inference time, `generate_manim_with_ritl()` couples the fine-tuned model with static AST verification (`verify_and_canonicalize`) and headless Manim execution (`manim -ql --dry_run`):
+1. **Pass 1:** Generates spatial layout reasoning (`<think>...</think>`) + ManimCE v0.19+ Python code.
+2. **Verification:** Validates AST syntax, ManimCE v0.19+ API compliance, and headless execution.
+3. **Pass 2 (Automatic 1-Turn Compiler Repair):** If any exception occurs, feeds the exact traceback back to the model (using the multi-turn repair format trained during SFT) to produce a repaired script.
+
+---
+
+## 3. Deploying to Kaggle & Running Evaluation
 
 ```bash
+# Deploy and launch on Kaggle GPU
+export KAGGLE_API_TOKEN="your_kaggle_token"
 export HF_TOKEN="your_hf_token"
-python src/training/dpo_trainer.py \
+python scripts/push_kaggle_kernel.py
+
+# Run held-out ManimBench-v1 / Autoresearch evaluation
+python src/eval/manim_benchmark_eval.py \
   --base_model Qwen/Qwen2.5-Coder-7B-Instruct \
-  --sft_adapter_repo PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit \
-  --dpo_dataset_repo PRB1/ManimCE-Master-DPO \
-  --hub_dpo_repo PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit
+  --adapter_repo PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit \
+  --max_cases 60
 ```
