@@ -78,26 +78,26 @@ def render_manim_video(
 ) -> Tuple[bool, Optional[str], Optional[str]]:
     """
     Render `.mp4` video using `manim -q<quality> --media_dir <media_dir> <py_path> <scene_name>`.
-    Returns `(success, mp4_path, error_traceback)`.
+    Includes both stdout LaTeX error logs and stderr tracebacks if rendering fails.
     """
     q_flag = f"-q{quality}" if not quality.startswith("-") else quality
     cmd = ["manim", "render", q_flag, "--media_dir", media_dir, py_path, scene_name]
     print(f"\n[Manim Renderer] Executing: {' '.join(cmd)} ...")
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=240)
         if proc.returncode == 0:
             mp4_candidates = glob.glob(os.path.join(media_dir, "videos", "**", f"{scene_name}.mp4"), recursive=True)
             if not mp4_candidates:
                 mp4_candidates = glob.glob(os.path.join(media_dir, "**", "*.mp4"), recursive=True)
             mp4_path = max(mp4_candidates, key=os.path.getmtime) if mp4_candidates else None
             return True, mp4_path, None
-        err = (proc.stderr or proc.stdout or "Manim render error").strip()
-        tail_err = "\n".join(err.splitlines()[-30:])
+        combined = ((proc.stdout or "") + "\n" + (proc.stderr or "")).strip()
+        tail_err = "\n".join(combined.splitlines()[-45:])
         return False, None, tail_err
     except FileNotFoundError:
         return False, None, "Manim CLI not found. Install via `pip install manim`."
     except subprocess.TimeoutExpired:
-        return False, None, "TimeoutError: Rendering exceeded 180s."
+        return False, None, "TimeoutError: Rendering exceeded 240s."
 
 
 @torch.no_grad()
