@@ -23,11 +23,17 @@ import time
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
-# Ensure required libraries are up to date on Kaggle GPU worker
-subprocess.run(
-    [sys.executable, "-m", "pip", "install", "-q", "--upgrade", "peft", "accelerate", "huggingface_hub"],
-    check=False,
-)
+# Read HF_TOKEN from environment or Kaggle UserSecrets and export to os.environ
+HF_TOKEN = os.environ.get("HF_TOKEN", "__HF_TOKEN_PLACEHOLDER__")
+if HF_TOKEN.startswith("__HF_TOKEN"):
+    try:
+        from kaggle_secrets import UserSecretsClient  # type: ignore
+
+        HF_TOKEN = UserSecretsClient().get_secret("HF_TOKEN")
+    except Exception:
+        HF_TOKEN = ""
+if HF_TOKEN:
+    os.environ["HF_TOKEN"] = HF_TOKEN
 
 import torch
 import torch.nn as nn
@@ -38,18 +44,10 @@ from transformers import (
     AutoTokenizer,
     get_cosine_schedule_with_warmup,
 )
+import peft.import_utils
+peft.import_utils.is_torchao_available = lambda: False
 from peft import LoraConfig, PeftModel, get_peft_model
 from huggingface_hub import HfApi, hf_hub_download, snapshot_download
-
-# Read HF_TOKEN from environment or Kaggle UserSecrets
-HF_TOKEN = os.environ.get("HF_TOKEN", "__HF_TOKEN_PLACEHOLDER__")
-if HF_TOKEN.startswith("__HF_TOKEN"):
-    try:
-        from kaggle_secrets import UserSecretsClient  # type: ignore
-
-        HF_TOKEN = UserSecretsClient().get_secret("HF_TOKEN")
-    except Exception:
-        HF_TOKEN = ""
 
 
 @dataclass

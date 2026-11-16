@@ -32,6 +32,8 @@ from transformers import (
     AutoTokenizer,
     get_cosine_schedule_with_warmup,
 )
+import peft.import_utils
+peft.import_utils.is_torchao_available = lambda: False
 from peft import LoraConfig, PeftModel, get_peft_model
 from huggingface_hub import HfApi, snapshot_download
 
