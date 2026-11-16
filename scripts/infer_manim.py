@@ -20,6 +20,10 @@ from typing import Optional, Tuple
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import peft.import_utils
+import peft.tuners.lora.torchao
+peft.import_utils.is_torchao_available = lambda: False
+peft.tuners.lora.torchao.is_torchao_available = lambda: False
 from peft import PeftModel
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -161,3 +165,4 @@ if __name__ == "__main__":
         output_py_path=args.output,
         render_quality=args.render,
     )
+

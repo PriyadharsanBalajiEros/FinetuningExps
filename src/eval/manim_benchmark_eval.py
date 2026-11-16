@@ -16,6 +16,10 @@ from typing import Any, Dict, List
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import peft.import_utils
+import peft.tuners.lora.torchao
+peft.import_utils.is_torchao_available = lambda: False
+peft.tuners.lora.torchao.is_torchao_available = lambda: False
 from peft import PeftModel
 from huggingface_hub import snapshot_download
 
