@@ -1,6 +1,6 @@
 {
-  "id": "priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-sft-dpo",
-  "title": "ManimCE Qwen25 Coder 7B 16Bit SFT DPO",
+  "id": "priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-dpo-eval",
+  "title": "ManimCE Qwen25 Coder 7B 16Bit DPO Eval",
   "code_file": "train_manimce_16bit_kaggle.py",
   "language": "python",
   "kernel_type": "script",

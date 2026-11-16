@@ -88,8 +88,8 @@ class PipelineConfig:
     dpo_lr: float = 1.0e-5
     dpo_beta: float = 0.1
     sft_epochs: int = 1
-    sft_max_steps: int = 125
-    dpo_max_steps: int = 80
+    sft_max_steps: int = 50
+    dpo_max_steps: int = 60
     save_every_steps: int = 25
     eval_every_steps: int = 25
     log_every_steps: int = 5
