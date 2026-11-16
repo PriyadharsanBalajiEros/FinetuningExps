@@ -54,3 +54,4 @@ python src/eval/manim_benchmark_eval.py \
   --adapter_repo PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit \
   --max_cases 60
 ```
+

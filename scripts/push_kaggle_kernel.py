@@ -58,3 +58,4 @@ if __name__ == "__main__":
     if not k_tok or not h_tok:
         raise ValueError("Both KAGGLE_API_TOKEN and HF_TOKEN environment variables are required.")
     push_and_verify_kaggle_kernel(kaggle_token=k_tok, hf_token=h_tok)
+

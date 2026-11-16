@@ -281,3 +281,4 @@ def verify_and_canonicalize(raw_code: str, min_lines: int = 6, max_lines: int = 
         num_lines=len(lines),
         repairs_applied=repairs,
     )
+
