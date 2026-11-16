@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Secrets & credentials (NEVER commit tokens)
+.env
+*.token
+access_token
+kaggle.json
+secrets.json
+
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Data, cache & model checkpoints (stored on HuggingFace Hub PRB1)
+data/raw/
+data/processed/*.parquet
+data/processed/*.jsonl
+data/cache/
+checkpoints/
+outputs/
+wandb/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

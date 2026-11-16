@@ -1,0 +1,216 @@
+{
+  "totals": {
+    "sft_train": 24033,
+    "sft_val": 500,
+    "sft_with_reasoning_traces": 8671,
+    "sft_ritl_self_repair": 1200,
+    "dpo_train": 2623,
+    "dpo_val": 138,
+    "eval_benchmark_heldout": 159,
+    "unique_code_hashes": 23492
+  },
+  "per_dataset_audit": {
+    "sebastianboehler/autoresearch-manim": {
+      "raw_rows": 150,
+      "ast_valid": 150,
+      "aligned_kept": 150,
+      "dedup_kept": 150,
+      "repairs_count": 0,
+      "rejection_reasons": {}
+    },
+    "SuienR/ManimBench-v1": {
+      "raw_rows": 416,
+      "ast_valid": 381,
+      "aligned_kept": 380,
+      "dedup_kept": 371,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "too_short (5 lines)": 22,
+        "too_short (4 lines)": 9,
+        "missing_explicit_quoted_literal": 1,
+        "duplicate_code_hash": 9,
+        "empty_or_missing_construct": 3,
+        "invalid_or_non_english_prompt": 1
+      }
+    },
+    "bespokelabs/bespoke-manim": {
+      "raw_rows": 100,
+      "ast_valid": 100,
+      "aligned_kept": 96,
+      "dedup_kept": 96,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "missing_explicit_quoted_literal": 3,
+        "contradiction": 1
+      }
+    },
+    "nabin2004/qwen3-8b-manimator-gold-sft": {
+      "raw_rows": 733,
+      "ast_valid": 733,
+      "aligned_kept": 730,
+      "dedup_kept": 712,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "duplicate_code_hash": 18,
+        "contradiction": 3
+      }
+    },
+    "nabin2004/AOS-Manim-SFT": {
+      "raw_rows": 371,
+      "ast_valid": 371,
+      "aligned_kept": 367,
+      "dedup_kept": 367,
+      "repairs_count": 2,
+      "rejection_reasons": {
+        "contradiction": 4
+      }
+    },
+    "nabin2004/AOS-Narrated-Manim-400": {
+      "raw_rows": 361,
+      "ast_valid": 361,
+      "aligned_kept": 357,
+      "dedup_kept": 357,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "contradiction": 4
+      }
+    },
+    "bakhil-aissa/Manim_code_traces": {
+      "raw_rows": 1300,
+      "ast_valid": 0,
+      "aligned_kept": 0,
+      "dedup_kept": 0,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "SyntaxError": 1300
+      }
+    },
+    "nabin2004/manim-sft-10k": {
+      "raw_rows": 10000,
+      "ast_valid": 7951,
+      "aligned_kept": 7722,
+      "dedup_kept": 6934,
+      "repairs_count": 7,
+      "rejection_reasons": {
+        "invalid_or_non_english_prompt": 1953,
+        "duplicate_code_hash": 788,
+        "no_valid_scene_subclass": 52,
+        "too_short (4 lines)": 9,
+        "contradiction": 211,
+        "too_short (5 lines)": 15,
+        "Uses legacy ManimGL CONFIG dictionary pattern": 4,
+        "empty_or_missing_construct": 3,
+        "missing_explicit_quoted_literal": 18,
+        "too_short (1 lines)": 2,
+        "too_short (2 lines)": 11
+      }
+    },
+    "Chimanwakis/manim_animation_dataset": {
+      "raw_rows": 6023,
+      "ast_valid": 5516,
+      "aligned_kept": 5156,
+      "dedup_kept": 5156,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "SyntaxError": 507,
+        "missing_explicit_quoted_literal": 360
+      }
+    },
+    "RY7Games/ry_manim_codegen": {
+      "raw_rows": 4625,
+      "ast_valid": 2209,
+      "aligned_kept": 2076,
+      "dedup_kept": 361,
+      "repairs_count": 374,
+      "rejection_reasons": {
+        "duplicate_code_hash": 1715,
+        "contradiction": 35,
+        "SyntaxError": 1065,
+        "too_short (1 lines)": 1198,
+        "no_valid_scene_subclass": 88,
+        "missing_explicit_quoted_literal": 98,
+        "too_short (5 lines)": 18,
+        "invalid_or_non_english_prompt": 29,
+        "forbidden_kwarg": 5,
+        "Uses legacy ManimGL CONFIG dictionary pattern": 9,
+        "empty_or_missing_construct": 4
+      }
+    },
+    "Noxus09/manim-dataset": {
+      "raw_rows": 422,
+      "ast_valid": 386,
+      "aligned_kept": 384,
+      "dedup_kept": 9,
+      "repairs_count": 4,
+      "rejection_reasons": {
+        "duplicate_code_hash": 375,
+        "too_short (5 lines)": 23,
+        "missing_explicit_quoted_literal": 1,
+        "empty_or_missing_construct": 2,
+        "too_short (4 lines)": 9,
+        "invalid_or_non_english_prompt": 2,
+        "contradiction": 1
+      }
+    },
+    "Edoh/manim_python": {
+      "raw_rows": 650,
+      "ast_valid": 0,
+      "aligned_kept": 0,
+      "dedup_kept": 0,
+      "repairs_count": 0,
+      "rejection_reasons": {
+        "invalid_or_non_english_prompt": 51,
+        "too_short (1 lines)": 599
+      }
+    },
+    "mistral-hackaton-2026/manim-finetune-data": {
+      "raw_rows": 2705,
+      "ast_valid": 1316,
+      "aligned_kept": 818,
+      "dedup_kept": 220,
+      "repairs_count": 192,
+      "rejection_reasons": {
+        "too_short (1 lines)": 281,
+        "SyntaxError": 1037,
+        "duplicate_code_hash": 598,
+        "insufficient_prompt_code_overlap": 243,
+        "no_valid_scene_subclass": 34,
+        "Uses legacy ManimGL CONFIG dictionary pattern": 6,
+        "unmatched_domain_concepts": 189,
+        "contradiction": 17,
+        "missing_explicit_quoted_literal": 49,
+        "too_short (5 lines)": 13,
+        "invalid_or_non_english_prompt": 12,
+        "empty_or_missing_construct": 2,
+        "forbidden_kwarg": 3,
+        "too_long (681 lines)": 1
+      }
+    },
+    "priyanshutomar2024/adaption-unified-manim-instructions": {
+      "raw_rows": 40383,
+      "ast_valid": 9007,
+      "aligned_kept": 8782,
+      "dedup_kept": 8759,
+      "repairs_count": 13,
+      "rejection_reasons": {
+        "no_valid_scene_subclass": 861,
+        "SyntaxError": 21395,
+        "code_leaked_in_prompt": 1352,
+        "invalid_or_non_english_prompt": 3039,
+        "too_short (2 lines)": 1439,
+        "Uses legacy ManimGL CONFIG dictionary pattern": 189,
+        "too_short (4 lines)": 1112,
+        "insufficient_prompt_code_overlap": 148,
+        "too_short (3 lines)": 636,
+        "too_short (1 lines)": 29,
+        "too_short (5 lines)": 1316,
+        "unmatched_domain_concepts": 71,
+        "duplicate_code_hash": 23,
+        "empty_code": 6,
+        "contradiction": 6,
+        "empty_or_missing_construct": 1,
+        "too_long (1351 lines)": 1
+      }
+    }
+  }
+}
