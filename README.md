@@ -1,51 +1,48 @@
-# FinetuningExps — `v1.0-data-pipeline`: ManimCE v0.19+ AST Sanitizer, Alignment Verifier & Master Corpus Pipeline
+# FinetuningExps — `v2.0-sft-16bit-engine`: Pure 16-Bit Dual-GPU High-Rank `rsLoRA` + `NEFTune` SFT Engine
 
-> **Branch Version:** `v1.0-data-pipeline`  
-> **Target Domain:** Programmatic Mathematical Animation Generation (`Manim Community Edition v0.19+`)  
-> **Published HuggingFace Datasets:**  
-> - **SFT Corpus:** [`PRB1/ManimCE-Master-SFT`](https://huggingface.co/datasets/PRB1/ManimCE-Master-SFT)  
-> - **DPO Corpus:** [`PRB1/ManimCE-Master-DPO`](https://huggingface.co/datasets/PRB1/ManimCE-Master-DPO)
-
----
-
-## 1. Why Existing Open-Source Manim Datasets Fail
-
-During our audit of 50+ public Manim repositories on Hugging Face, we identified two root causes that cripple off-the-shelf LLMs and naive fine-tunes:
-
-1. **Row-Shuffled Prompt-Code Misalignment in Legacy Datasets:**
-   - One of the earliest public Manim datasets (`generaleoley/manim-codegen`) contains severely misaligned rows where the natural-language prompt and Python code belong to completely different animations (e.g., Row 0 requests a *"3D cylinder with a 3D coordinate system and the text 'Kiron'"*, while the paired code is `AreaUnderCurveExample` computing $\int_1^3 x^2\,dx$).
-   - Over six downstream datasets (`ArunKr/cleaned-manim-dataset`, `ArunKr/merged-manim-instruct`, `thanhkt/manim_code`, `HyperCluster/ManimatorDataset`, `Aarif1430/manim-instruct`, and the raw `output` column of `priyanshutomar2024/adaption-unified-manim-instructions`) merged those unverified pairs directly.
-2. **API Version Drift (`ManimGL` / `manimlib` vs. `ManimCE v0.19+`):**
-   - Legacy 3Blue1Brown scripts use `from manimlib.imports import *`, `ShowCreation()`, `TexMobject()`, `TextMobject()`, and `CONFIG = {...}`, while early ManimCE v0.14 scripts use `axes.get_graph()`. Mixing these with modern ManimCE v0.19+ (`Create`, `MathTex`, `Tex`, `Text`, `axes.plot`) causes immediate `NameError` and `AttributeError` crashes at runtime.
+> **Branch Version:** `v2.0-sft-16bit-engine`  
+> **Base Backbone:** `Qwen/Qwen2.5-Coder-7B-Instruct` (Native `torch.float16`, Zero 4-Bit Quantization)  
+> **Target Hardware:** Kaggle `GPU T4 x2` (`2 × 16 GB = 32 GB VRAM`)  
+> **Live Checkpoint Repository:** [`PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit`](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit)
 
 ---
 
-## 2. Pipeline Architecture (`src/data_pipeline/`)
+## 1. Why Pure 16-Bit (`FP16`) Dual-GPU Sharding Beats 4-Bit Unsloth
 
-```mermaid
-flowchart LR
-    A["15+ Public HF Manim Datasets\n(~80,000+ Raw Rows)"] --> B["manim_canonicalizer.py\nAST Parser & ManimCE v0.19+ Modernizer"]
-    B --> C["alignment_filter.py\nPrompt-to-Code Semantic & Contradiction Filter"]
-    C --> D["SHA-256 Whitespace-Invariant\nAST Deduplication & Split Isolation"]
-    D --> E["dpo_pair_builder.py\nHard-Negative DPO & RITL Self-Repair Builder"]
-    E --> F["PRB1/ManimCE-Master-SFT\n& PRB1/ManimCE-Master-DPO"]
-```
+While 4-bit QLoRA (`NF4`) is popular on single GPUs, compressing weights to 4-bit introduces quantization noise in mathematical coordinate calculations and causes an activation-to-weight mismatch when merging adapters back into 16-bit weights. Furthermore, single-GPU tools leave Kaggle's second T4 GPU completely idle.
 
-### Key Modules in `v1.0-data-pipeline`
+Our custom PyTorch SFT engine (`src/training/sft_trainer.py`) uses **zero 4-bit quantization**:
 
-| File | Responsibility |
-| :--- | :--- |
-| `src/data_pipeline/manim_canonicalizer.py` | Extracts Python code from markdown/CoT wrappers, rejects `manimlib` / `ManimGL` scripts, modernizes safe legacy calls (`ShowCreation` $\rightarrow$ `Create`, `TexMobject` $\rightarrow$ `MathTex`, `TextMobject` $\rightarrow$ `Tex`, `.get_graph` $\rightarrow$ `.plot`), auto-upgrades 2D `Scene` to `ThreeDScene` when `set_camera_orientation` is invoked, rejects forbidden kwargs (`axis_color` on `Axes`, `element_color`), and validates `ast.parse()`. |
-| `src/data_pipeline/alignment_filter.py` | Cross-checks domain concepts (`3d_geometry`, `calculus_integral`, `calculus_derivative`, `linear_algebra`, `trigonometry`, `complex_numbers`, `probability_stats`, `graph_theory`), quoted proper nouns, and identifier tokens between prompt and code to eliminate row-shuffled pairs. |
-| `src/data_pipeline/dpo_pair_builder.py` | Generates Stage-2 DPO preference pairs `(prompt, chosen, rejected)` by injecting realistic frontier-LLM failure modes (deprecated APIs, invalid `Axes` kwargs, wrong `ThreeDScene` base class, and spatial overlap at `ORIGIN`) plus 2-turn **Renderer-in-the-Loop (RITL)** compiler traceback repair trajectories. |
-| `src/data_pipeline/hf_loader.py` | High-speed pure-Python & PyArrow dataset loader supporting `.jsonl`, `.csv`, `.parquet`, and `datasets-server` pagination. |
-| `src/data_pipeline/build_master_dataset.py` | End-to-end orchestrator that builds `sft_train.jsonl`, `sft_val.jsonl`, `eval_benchmark.jsonl`, `dpo_train.jsonl`, `dpo_val.jsonl`, and `data/curation_audit_report.json`, and uploads them to HuggingFace Hub (`PRB1`). |
+1. **Balanced Native 16-Bit Pipeline Sharding (`device_map="auto"`):**
+   - Shards `Qwen/Qwen2.5-Coder-7B-Instruct` ($7.6\text{B} \times 2\text{ bytes} = 15.2\text{ GB}$) evenly across `cuda:0` ($\approx 7.6\text{ GB}$) and `cuda:1` ($\approx 7.6\text{ GB}$) using `SDPA` (Scaled Dot-Product Attention) and non-reentrant gradient checkpointing.
+2. **High-Rank Rank-Stabilized LoRA (`rsLoRA`):**
+   - Trains $r = 64, \alpha = 64$ across all 7 linear projections (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`) with Rank-Stabilized scaling:
+     $$\Delta W = \frac{\alpha}{\sqrt{r}} B A = \frac{64}{\sqrt{64}} B A = 8.0 \cdot B A$$
+   - Prevents gradient collapse at high rank and matches full 16-bit fine-tuning capacity.
+3. **Exact Multi-Turn Completion-Only Loss Masking (`ManimChatDataset`):**
+   - Tokenizes full multi-turn ChatML conversations (`system`, `user`, `assistant`) and masks every `system` and `user` token with `-100`:
+     $$\mathcal{L}_{\text{SFT}}(\theta) = -\frac{1}{|T_{\text{assistant}}|} \sum_{t \in T_{\text{assistant}}} \log P_\theta(y_t \mid y_{<t}, x)$$
+   - Ensures 100% of parameter updates go toward learning `<think>` spatial layout planning, ManimCE v0.19+ syntax, and multi-turn compiler self-repair.
+4. **Custom `NEFTune` Embedding Noise Hook ($\alpha = 5.0$):**
+   - Injects uniform noise into token embeddings during training forward passes:
+     $$\tilde{\mathbf{e}} = \mathbf{e} + \mathcal{U}(-1, 1) \cdot \frac{\alpha}{\sqrt{L \cdot d}}$$
+   - Empirically improves code instruction adherence and reduces syntactic hallucinations.
+5. **Fault-Tolerant HuggingFace Hub Checkpointing & Auto-Resume:**
+   - Automatically syncs adapter weights, tokenizer, validation perplexity, and `training_state.json` to `PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit` every `save_every_steps`, and automatically resumes from the latest Hub step across Kaggle sessions.
 
 ---
 
-## 3. Reproducing the Master Dataset Curation
+## 2. Running Stage-1 16-Bit SFT
 
 ```bash
 export HF_TOKEN="your_hf_token"
-python src/data_pipeline/build_master_dataset.py
+python src/training/sft_trainer.py \
+  --base_model Qwen/Qwen2.5-Coder-7B-Instruct \
+  --dataset_repo PRB1/ManimCE-Master-SFT \
+  --hub_model_repo PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit \
+  --lora_r 64 \
+  --lora_alpha 64 \
+  --max_seq_length 3072 \
+  --learning_rate 1.5e-4 \
+  --num_epochs 2
 ```
