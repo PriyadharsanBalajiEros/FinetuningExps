@@ -5,21 +5,35 @@
 [![HuggingFace SFT Model](https://img.shields.io/badge/HF%20Model-Qwen2.5--Coder--7B--ManimCE--SFT--16bit-blue)](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit)
 [![HuggingFace DPO Model](https://img.shields.io/badge/HF%20Model-Qwen2.5--Coder--7B--ManimCE--DPO--16bit-success)](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit)
 
-An end-to-end, from-scratch **Pure 16-Bit (`torch.float16`) Dual-GPU Supervised Fine-Tuning (SFT) + Adapter-Reference Direct Preference Optimization (DPO) + Renderer-in-the-Loop (RITL)** framework engineered to train open-weight code LLMs (`Qwen/Qwen2.5-Coder-7B-Instruct`) to excel at **Manim Community Edition (`ManimCE v0.19+`)** mathematical animation generation on free Kaggle `GPU T4 x2` (`32 GB VRAM`) hardware—**with zero 4-bit quantization degradation**.
+An end-to-end, from-scratch **Pure 16-Bit (`torch.float16`) Dual-GPU Supervised Fine-Tuning (SFT) + Adapter-Reference Direct Preference Optimization (DPO) + Renderer-in-the-Loop (RITL)** framework engineered to train `Qwen/Qwen2.5-Coder-7B-Instruct` to excel at **Manim Community Edition (`ManimCE v0.19+`)** mathematical animation generation on free Kaggle `GPU T4 x2` (`32 GB VRAM`) hardware—**with zero 4-bit quantization degradation**.
+
+---
+
+## Verified Empirical Results (`ManimBench-v1` & `autoresearch-manim` Held-Out Benchmark)
+
+All training, alignment, and held-out evaluation stages completed in **`7h 46m 46s`** of Kaggle Dual-T4 GPU compute (out of `45h 00m` weekly quota):
+
+| Stage / Metric | Verified Result | Artifact / Checkpoint Location |
+| :--- | :---: | :--- |
+| **Master SFT Corpus (`PRB1/ManimCE-Master-SFT`)** | **24,033 Train** (`8,671` CoT + `1,200` RITL) \| **500 Val** \| **159 Test** | [`data/curation_audit_report.json`](data/curation_audit_report.json) |
+| **Master DPO Corpus (`PRB1/ManimCE-Master-DPO`)** | **2,623 Train** \| **138 Val** Preference Pairs | [`PRB1/ManimCE-Master-DPO`](https://huggingface.co/datasets/PRB1/ManimCE-Master-DPO) |
+| **Stage 1: 16-Bit `rsLoRA` ($r=64$) + `NEFTune` SFT** | **`Best Val Loss = 0.5070`** (**`Val Perplexity = 1.6604`**) | [`data/sft_best_training_state.json`](data/sft_best_training_state.json) / `best/` on HF |
+| **Stage 2: 16-Bit Adapter-Reference `DPO` + `RPO-NLL`** | **`DPO Loss: 0.7343 -> 0.1759`** (**`100.0%` Preference Acc**) | [`data/dpo_training_state.json`](data/dpo_training_state.json) |
+| **Stage 3: Held-Out `Pass@1` (AST & ManimCE v0.19+ Valid)** | **`86.67%`** (`26 / 30` held-out test scenes) | [`data/manimbench_eval_results.json`](data/manimbench_eval_results.json) |
+| **Stage 3: Held-Out `Pass@2` (1-Turn `RITL` Self-Repair)** | **`93.33%`** (`28 / 30` held-out test scenes) | [`data/manimbench_eval_results.json`](data/manimbench_eval_results.json) |
+| **Peak Dual-T4 VRAM Usage (Chunked Cross-Entropy)** | **`GPU 0: 10.50 GiB` \| `GPU 1: 10.47 GiB`** *(out of 14.56 GiB/GPU)* | Zero 4-bit quantization loss |
 
 ---
 
 ## Repository Version Branches
 
-This repository is organized into progressive versioned release branches, each containing its own dedicated technical `README.md`:
-
 | Branch | Milestone / Scope | Dedicated Documentation |
 | :--- | :--- | :--- |
 | **`v1.0-data-pipeline`** | Multi-source public dataset ingestion, AST verification, ManimCE v0.19+ canonicalizer, prompt-code alignment filter, and DPO/RITL pair synthesis. | [`docs/branches/README_v1_data.md`](docs/branches/README_v1_data.md) |
-| **`v2.0-sft-16bit-engine`** | From-scratch Pure 16-Bit (`FP16`) Dual-T4 GPU `rsLoRA` ($r=64, \alpha=64$) SFT trainer with completion-only loss masking, `NEFTune` ($\alpha=5.0$), and fault-tolerant HF Hub checkpointing. | [`docs/branches/README_v2_sft.md`](docs/branches/README_v2_sft.md) |
+| **`v2.0-sft-16bit-engine`** | From-scratch Pure 16-Bit (`FP16`) Dual-T4 GPU `rsLoRA` ($r=64, \alpha=64$) SFT trainer with completion-only loss masking, `NEFTune` ($\alpha=5.0$), Chunked Cross-Entropy (`compute_chunked_ce_loss`), and HF Hub checkpointing. | [`docs/branches/README_v2_sft.md`](docs/branches/README_v2_sft.md) |
 | **`v3.0-dpo-compiler-alignment`** | Zero-memory-overhead 16-bit Adapter-Reference `DPO` + `RPO-NLL` alignment engine eliminating legacy `ManimGL`/v0.14 hallucinations and layout overlap. | [`docs/branches/README_v3_dpo.md`](docs/branches/README_v3_dpo.md) |
-| **`v4.0-kaggle-automation-and-eval`** | Automated Kaggle GPU kernel deployment (`priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-sft-dpo`), 1-turn `RITL` self-repair agent, and held-out `ManimBench-v1` / `autoresearch-manim` evaluation suite. | [`docs/branches/README_v4_kaggle_eval.md`](docs/branches/README_v4_kaggle_eval.md) |
-| **`main`** | Complete unified production codebase integrating all four stages. | This document (`README.md`) |
+| **`v4.0-kaggle-automation-and-eval`** | Automated Kaggle GPU kernel deployment (`priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-dpo-eval`), self-healing watchdog monitor, 1-turn `RITL` self-repair agent, and held-out `ManimBench-v1` / `autoresearch-manim` evaluation suite. | [`docs/branches/README_v4_kaggle_eval.md`](docs/branches/README_v4_kaggle_eval.md) |
+| **`main`** | Complete unified production codebase and empirical evaluation results. | This document (`README.md`) |
 
 ---
 
@@ -35,28 +49,26 @@ flowchart TD
     end
 
     subgraph P2["Phase 2: Pure 16-Bit Dual-GPU SFT (v2.0-sft-16bit-engine)"]
-        D5 --> S1["Qwen2.5-Coder-7B-Instruct in Native FP16 Across 2x T4 (32GB VRAM)"]
-        S1 --> S2["High-Rank rsLoRA (r=64, alpha=64) + Completion-Only Masking + NEFTune"]
-        S2 --> S3["Live Checkpointing -> PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit"]
+        D5 --> S1["Qwen2.5-Coder-7B-Instruct in Native FP16 Across 2x T4 (10.50 / 10.47 GiB)"]
+        S1 --> S2["High-Rank rsLoRA (r=64) + Chunked CE Loss + Completion-Only Masking + NEFTune"]
+        S2 --> S3["Gold Checkpoint (Val Loss 0.5070, PPL 1.6604) -> PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit"]
     end
 
     subgraph P3["Phase 3: 16-Bit Compiler-Aligned DPO (v3.0-dpo-compiler-alignment)"]
         S3 --> A1["In-Memory 16-Bit Merge (Stage-1 Backbone = pi_ref, 0 Extra VRAM)"]
-        A1 --> A2["RPO-Stabilized DPO (beta=0.1, lambda_NLL=0.1) vs. Legacy APIs & Bugs"]
+        A1 --> A2["RPO-Stabilized DPO (beta=0.1, lambda_NLL=0.1) -> 100% Preference Accuracy"]
         A2 --> A3["Aligned Model -> PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit"]
     end
 
     subgraph P4["Phase 4: RITL Self-Repair & ManimBench Eval (v4.0-kaggle-automation-and-eval)"]
-        A3 --> E1["Pass@1 Generation + Static AST / Headless ManimCE Verification"]
-        E1 --> E2["Pass@2 1-Turn Compiler Traceback Self-Repair (RITL)"]
+        A3 --> E1["Pass@1 Held-Out Evaluation: 86.67% Valid ManimCE v0.19+"]
+        E1 --> E2["Pass@2 1-Turn Compiler Traceback Self-Repair (RITL): 93.33% Valid"]
     end
 ```
 
 ---
 
 ## 2. Empirical Dataset Curation & Sanitization Audit (`data/curation_audit_report.json`)
-
-Our automated audit of **68,239 raw rows** across public Hugging Face Manim datasets revealed massive syntax corruption (`>23,000` invalid Python ASTs), row-shuffled prompt-code misalignments, and legacy `ManimGL` (`manimlib`) contamination. Below is the exact breakdown produced by `src/data_pipeline/build_master_dataset.py`:
 
 | Public Dataset Source | Raw Rows | AST Valid | Aligned | Deduplicated Kept | Key Rejection / Sanitization Reasons |
 | :--- | :---: | :---: | :---: | :---: | :--- |
@@ -76,54 +88,17 @@ Our automated audit of **68,239 raw rows** across public Hugging Face Manim data
 
 ---
 
-## 3. Repository Structure
+## 3. Quickstart Usage
 
-```text
-ManimFineTuneExperiment/
-├── src/
-│   ├── data_pipeline/
-│   │   ├── manim_canonicalizer.py    # Python AST parser & ManimCE v0.19+ code modernizer
-│   │   ├── alignment_filter.py       # Semantic & lexical prompt-to-code alignment verifier
-│   │   ├── dpo_pair_builder.py       # Hard-negative DPO & 2-turn RITL self-repair generator
-│   │   ├── hf_loader.py              # Pure-Python & PyArrow HuggingFace dataset loader
-│   │   └── build_master_dataset.py   # Full curation orchestrator & HF Hub uploader
-│   ├── training/
-│   │   ├── sft_trainer.py            # Custom 16-bit Dual-GPU rsLoRA + NEFTune SFT trainer
-│   │   └── dpo_trainer.py            # Custom 16-bit Adapter-Reference DPO + RPO-NLL trainer
-│   ├── inference/
-│   │   └── ritl_agent.py             # Renderer-in-the-Loop (RITL) 1-turn compiler self-repair
-│   └── eval/
-│       └── manim_benchmark_eval.py   # Held-out ManimBench-v1 & Autoresearch evaluator
-├── kaggle_kernel/
-│   ├── kernel-metadata.json          # Kaggle GPU kernel configuration
-│   └── train_manimce_16bit_kaggle.py # Standalone fault-tolerant Kaggle Dual-T4 training script
-├── scripts/
-│   └── push_kaggle_kernel.py         # Automated Kaggle CLI/API kernel deployment & status check
-├── docs/branches/                    # Dedicated technical READMEs for v1.0, v2.0, v3.0, v4.0
-├── data/curation_audit_report.json   # Complete per-dataset AST & alignment audit metrics
-└── requirements.txt
-```
-
----
-
-## 4. Quickstart Usage
-
-### A. Curate & Upload Master Datasets
 ```bash
+# 1. Curate & upload master datasets
 export HF_TOKEN="your_hf_token"
 python src/data_pipeline/build_master_dataset.py
-```
 
-### B. Deploy & Launch 16-Bit Training on Kaggle Free GPU (`T4 x2`)
-```bash
+# 2. Deploy & launch 16-bit SFT + DPO + Benchmark on Kaggle Dual-T4 GPU
 export KAGGLE_API_TOKEN="your_kaggle_token"
-export HF_TOKEN="your_hf_token"
 python scripts/push_kaggle_kernel.py
-```
 
-### C. Run Local/Cloud Multi-GPU 16-Bit SFT & DPO Directly
-```bash
-python src/training/sft_trainer.py --base_model Qwen/Qwen2.5-Coder-7B-Instruct
-python src/training/dpo_trainer.py --base_model Qwen/Qwen2.5-Coder-7B-Instruct
+# 3. Monitor live Kaggle GPU & HuggingFace Hub checkpoints (with self-healing watchdog)
+python scripts/monitor_kaggle_and_hub.py
 ```
-

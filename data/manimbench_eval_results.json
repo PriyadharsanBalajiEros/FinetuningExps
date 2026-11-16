@@ -1,0 +1,161 @@
+{
+  "num_cases": 30,
+  "pass1_ast_and_api_valid_pct": 86.67,
+  "pass2_ritl_self_repaired_pct": 93.33,
+  "details": [
+    {
+      "id": "autoresearch-manim_000001",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000006",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000011",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000016",
+      "pass1_valid": false,
+      "pass2_valid": true,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000021",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000026",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000031",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000036",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000041",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000046",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000051",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000056",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000061",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000066",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000071",
+      "pass1_valid": false,
+      "pass2_valid": false,
+      "error": "SyntaxError: invalid syntax (line 1)"
+    },
+    {
+      "id": "autoresearch-manim_000076",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000081",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000086",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000091",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000096",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000101",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000106",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000111",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000116",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000121",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000126",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000131",
+      "pass1_valid": false,
+      "pass2_valid": false,
+      "error": "SyntaxError: invalid syntax (line 1)"
+    },
+    {
+      "id": "autoresearch-manim_000136",
+      "pass1_valid": true,
+      "pass2_valid": true
+    },
+    {
+      "id": "autoresearch-manim_000141",
+      "pass1_valid": false,
+      "pass2_valid": true,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000146",
+      "pass1_valid": true,
+      "pass2_valid": true
+    }
+  ]
+}
