@@ -45,9 +45,9 @@ def auto_reset_and_push_kernel(k_api: KaggleApi, hf_token: str, kernel_ref: str)
 def check_live_status(
     kaggle_token: str,
     hf_token: str,
-    kernel_ref: str = "priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-dpo-eval",
-    sft_repo: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit",
-    dpo_repo: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit",
+    kernel_ref: str = "priyadharsanbalaji18/manimce-qwen25-coder-7b-v2-animative",
+    sft_repo: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-V2-SFT-16bit",
+    dpo_repo: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-V2-DPO-16bit",
     auto_heal: bool = True,
 ) -> None:
     os.environ["KAGGLE_API_TOKEN"] = kaggle_token
@@ -103,7 +103,18 @@ def check_live_status(
                     print("  Recent Step History:")
                     for h in hist[-5:]:
                         print(f"    {h}")
-            if "manimbench_eval_results.json" in files:
+            if "v2_real_render_eval_results.json" in files:
+                ev_path = hf_hub_download(
+                    repo_id=repo_id, filename="v2_real_render_eval_results.json", repo_type="model", token=hf_token
+                )
+                with open(ev_path, "r", encoding="utf-8") as f:
+                    ev = json.load(f)
+                print(
+                    f"  [V2 STAGE 3 REAL MANIM RENDER EVAL] Cases: {ev.get('num_cases')} | "
+                    f"Pass@1 MP4 Render: {ev.get('pass1_real_mp4_render_pct')}% | "
+                    f"Pass@2 RITL MP4 Render: {ev.get('pass2_ritl_real_mp4_render_pct')}%"
+                )
+            elif "manimbench_eval_results.json" in files:
                 ev_path = hf_hub_download(
                     repo_id=repo_id, filename="manimbench_eval_results.json", repo_type="model", token=hf_token
                 )

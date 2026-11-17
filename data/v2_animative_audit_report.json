@@ -1,0 +1,20 @@
+{
+  "sft_train_v2": 5400,
+  "sft_val_v2": 200,
+  "dpo_train_v2": 1600,
+  "single_act_animative": 4800,
+  "multi_act_modular": 800,
+  "truncation_rate_pct": 0.0,
+  "audit_breakdown": {
+    "total_checked": 24033,
+    "rejected_too_long_would_truncate": 4585,
+    "rejected_latex_MathTex_string_concat_or_fstring": 364,
+    "rejected_low_animation_density": 13064,
+    "kept_single_act_animative": 4800,
+    "rejected_latex_quote_inside_latex_text_block": 4,
+    "rejected_latex_unbalanced_latex_braces": 42,
+    "rejected_latex_empty_MathTex": 1,
+    "rejected_latex_SyntaxError:unexpected character after line continuation character": 1,
+    "synthesized_multi_act_scenes": 800
+  }
+}

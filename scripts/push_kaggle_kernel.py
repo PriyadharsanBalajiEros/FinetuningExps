@@ -19,14 +19,17 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 def push_and_verify_kaggle_kernel(
     kaggle_token: str,
     hf_token: str,
-    kernel_src_dir: str = "kaggle_kernel",
-    build_dir: str = "outputs/kaggle_build",
+    kernel_src_dir: str = "kaggle_kernel_v2",
+    build_dir: str = "outputs/kaggle_build_v2",
 ) -> None:
     os.environ["KAGGLE_API_TOKEN"] = kaggle_token
     os.makedirs(build_dir, exist_ok=True)
 
     meta_src = os.path.join(kernel_src_dir, "kernel-metadata.json")
-    script_src = os.path.join(kernel_src_dir, "train_manimce_16bit_kaggle.py")
+    with open(meta_src, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+    code_file = meta["code_file"]
+    script_src = os.path.join(kernel_src_dir, code_file)
 
     shutil.copyfile(meta_src, os.path.join(build_dir, "kernel-metadata.json"))
     with open(script_src, "r", encoding="utf-8") as f:
@@ -34,11 +37,9 @@ def push_and_verify_kaggle_kernel(
 
     # Inject HF token into the gitignored private build copy only
     code_injected = code.replace("__HF_TOKEN_PLACEHOLDER__", hf_token)
-    with open(os.path.join(build_dir, "train_manimce_16bit_kaggle.py"), "w", encoding="utf-8") as f:
+    with open(os.path.join(build_dir, code_file), "w", encoding="utf-8") as f:
         f.write(code_injected)
 
-    with open(meta_src, "r", encoding="utf-8") as f:
-        meta = json.load(f)
     kernel_ref = meta["id"]
 
     api = KaggleApi()
