@@ -1,0 +1,15 @@
+{
+  "id": "priyadharsanbalaji18/manimce-qwen25-coder-7b-v3-exec",
+  "title": "ManimCE Qwen2.5-Coder-7B 16-Bit V3 Execution-Verified SFT+DPO+MP4Eval",
+  "code_file": "train_manimce_v3_kaggle.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
