@@ -1,0 +1,67 @@
+{
+  "global_step": 60,
+  "sft_best_val_loss": 0.4042796429246664,
+  "status": "completed",
+  "history": [
+    {
+      "step": 5,
+      "dpo_loss": 0.70969,
+      "pref_acc": 57.5
+    },
+    {
+      "step": 10,
+      "dpo_loss": 0.50431,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 15,
+      "dpo_loss": 0.2984,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 20,
+      "dpo_loss": 0.22124,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 25,
+      "dpo_loss": 0.15057,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 30,
+      "dpo_loss": 0.16288,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 35,
+      "dpo_loss": 0.12351,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 40,
+      "dpo_loss": 0.11881,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 45,
+      "dpo_loss": 0.10995,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 50,
+      "dpo_loss": 0.12727,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 55,
+      "dpo_loss": 0.1058,
+      "pref_acc": 100.0
+    },
+    {
+      "step": 60,
+      "dpo_loss": 0.12725,
+      "pref_acc": 100.0
+    }
+  ]
+}
