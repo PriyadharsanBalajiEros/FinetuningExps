@@ -38,8 +38,8 @@ from src.data_pipeline.manim_canonicalizer import verify_and_canonicalize
 
 def load_manimce_16bit_model(
     base_model_id: str = "Qwen/Qwen2.5-Coder-7B-Instruct",
-    sft_repo_id: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-SFT-16bit",
-    dpo_repo_id: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-DPO-16bit",
+    sft_repo_id: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-V3-SFT-16bit",
+    dpo_repo_id: str = "PRB1/Qwen2.5-Coder-7B-ManimCE-V3-DPO-16bit",
     hf_token: Optional[str] = None,
 ) -> Tuple[AutoModelForCausalLM, AutoTokenizer]:
     """Load 16-bit base model and merge Stage-1 Gold SFT (`best`) + Stage-2 DPO adapters."""

@@ -35,6 +35,16 @@ All training, alignment, and held-out evaluation stages completed in **`7h 46m 4
 
 > **V2 Diagnosis:** While V2 lowered SFT Val Loss (`0.5070 -> 0.4043`) and reached `100.0%` DPO preference accuracy, real `manim render -ql` execution exposed runtime API mismatches (`label_font_size`, `max_points_per_line`, `target_position`, `axes.y_max`, `set_zoom`, `BBLUE`) because the SFT/DPO datasets were AST-verified rather than execution-verified against ManimCE. The 5-act Softmax-to-Window-Attention stress test also failed Pass@1/Pass@2 with `SyntaxError: invalid syntax (line 1)`.
 
+### V3 Execution-Verified & 3-Turn RITL Pipeline (`v6.0-v3-execution-verified`)
+
+| Stage / Metric | Verified Result | Artifact / Checkpoint Location |
+| :--- | :---: | :--- |
+| **V3 Execution-Verified SFT (`PRB1/ManimCE-ExecVerified-V3-SFT`)** | **100% `manim --dry_run` Verified** (`train` + `validation` + `test` + 25% RITL self-repair) | [`PRB1/ManimCE-ExecVerified-V3-SFT`](https://huggingface.co/datasets/PRB1/ManimCE-ExecVerified-V3-SFT) |
+| **V3 Execution-Grounded DPO (`PRB1/ManimCE-ExecVerified-V3-DPO`)** | **Execution-Grounded Preference Pairs** targeting V2 API/LaTeX errors | [`PRB1/ManimCE-ExecVerified-V3-DPO`](https://huggingface.co/datasets/PRB1/ManimCE-ExecVerified-V3-DPO) |
+| **V3 Stage 1: 16-Bit `rsLoRA` ($r=64$) SFT** | **`Best Val Loss = 0.4159`** (`Val PPL = 1.5157` at Step 80) \| **`11.59 / 11.56 GiB`** | [`data/v3_sft_best_training_state.json`](data/v3_sft_best_training_state.json) / [`PRB1/Qwen2.5-Coder-7B-ManimCE-V3-SFT-16bit`](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-V3-SFT-16bit) |
+| **V3 Stage 2: 16-Bit Adapter-Reference `DPO` (`60/60` steps)** | **`DPO Loss: 0.7240 -> 0.3450`** (**`87.5–100.0%` Preference Acc**) | [`data/v3_dpo_training_state.json`](data/v3_dpo_training_state.json) / [`PRB1/Qwen2.5-Coder-7B-ManimCE-V3-DPO-16bit`](https://huggingface.co/PRB1/Qwen2.5-Coder-7B-ManimCE-V3-DPO-16bit) |
+| **V3 Stage 3: Real `manim render -ql` `.mp4` Eval (`16` cases)** | **`Pass@1 MP4: 31.25%` (`5/16`) \| `Pass@2 RITL: 43.75%` (`7/16`) \| `Pass@3 RITL: 50.0%` (`8/16`)** | [`data/v3_real_render_eval_results.json`](data/v3_real_render_eval_results.json) |
+
 ---
 
 ## Repository Version Branches
@@ -46,6 +56,7 @@ All training, alignment, and held-out evaluation stages completed in **`7h 46m 4
 | **`v3.0-dpo-compiler-alignment`** | Zero-memory-overhead 16-bit Adapter-Reference `DPO` + `RPO-NLL` alignment engine eliminating legacy `ManimGL`/v0.14 hallucinations and layout overlap. | [`docs/branches/README_v3_dpo.md`](docs/branches/README_v3_dpo.md) |
 | **`v4.0-kaggle-automation-and-eval`** | Automated Kaggle GPU kernel deployment (`priyadharsanbalaji18/manimce-qwen25-coder-7b-16bit-dpo-eval`), self-healing watchdog monitor, 1-turn `RITL` self-repair agent, and held-out `ManimBench-v1` / `autoresearch-manim` evaluation suite. | [`docs/branches/README_v4_kaggle_eval.md`](docs/branches/README_v4_kaggle_eval.md) |
 | **`v5.0-v2-ultra-animative`** | V2 zero-truncation (`0.0%` >2048 tokens) & high-animation-density dataset, Dual-T4 16-bit SFT+DPO training (`priyadharsanbalaji18/manimce-qwen25-coder-7b-v2-animative`), and real `manim render -ql` `.mp4` evaluation. | [`kaggle_kernel_v2/train_manimce_v2_kaggle.py`](kaggle_kernel_v2/train_manimce_v2_kaggle.py) |
+| **`v6.0-v3-execution-verified`** | V3 `manim --dry_run` execution-verified corpus, execution-grounded RITL/DPO, Dual-T4 16-bit training (`priyadharsanbalaji18/manimce-qwen25-coder-7b-v3-exec`), and 3-turn RITL real `.mp4` evaluation (`50.0%` Pass@3). | [`kaggle_kernel_v3/train_manimce_v3_kaggle.py`](kaggle_kernel_v3/train_manimce_v3_kaggle.py) |
 | **`main`** | Complete unified production codebase and empirical evaluation results. | This document (`README.md`) |
 
 ---

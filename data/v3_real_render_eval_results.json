@@ -1,0 +1,136 @@
+{
+  "num_cases": 16,
+  "pass1_real_mp4_render_pct": 31.25,
+  "pass2_ritl_real_mp4_render_pct": 43.75,
+  "pass3_ritl_real_mp4_render_pct": 50.0,
+  "details": [
+    {
+      "id": "autoresearch-manim_000001",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000006",
+      "pass1_render": false,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 2,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000011",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000016",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   3195 \u2502   def null_point_align(self, mobject: Mobject) -> Self:             \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/mobject/mobject.py:3225 in     \u2502\n\u2502 add_n_more_submobjects                                                       \u2502\n\u2502                                                                              \u2502\n\u2502   3222 \u2502   \u2502   curr = len(self.submobjects)                                  \u2502\n\u2502   3223 \u2502   \u2502   if curr == 0:                                                 \u2502\n\u2502   3224 \u2502   \u2502   \u2502   # If empty, simply add n point mobjects                   \u2502\n\u2502 \u2771 3225 \u2502   \u2502   \u2502   self.submobjects = [self.get_point_mobject() for k in ran \u2502\n\u2502   3226 \u2502   \u2502   \u2502   return None                                               \u2502\n\u2502   3227 \u2502   \u2502                                                                 \u2502\n\u2502   3228 \u2502   \u2502   target = curr + n                                             \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/mobject/mobject.py:3172 in     \u2502\n\u2502 get_point_mobject                                                            \u2502\n\u2502                                                                              \u2502\n\u2502   3169 \u2502   \u2502   Should by a point of the appropriate type                     \u2502\n\u2502   3170 \u2502   \u2502   \"\"\"                                                           \u2502\n\u2502   3171 \u2502   \u2502   msg = f\"get_point_mobject not implemented for {self.__class__ \u2502\n\u2502 \u2771 3172 \u2502   \u2502   raise NotImplementedError(msg)                                \u2502\n\u2502   3173 \u2502                                                                     \u2502\n\u2502   3174 \u2502   def align_points(self, mobject: Mobject) -> Self:                 \u2502\n\u2502   3175 \u2502   \u2502   count1 = self.get_num_points()                                \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNotImplementedError: get_point_mobject not implemented for Mobject"
+    },
+    {
+      "id": "autoresearch-manim_000021",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp1535d3d4/scene_eval.py:21 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   18 \u2502   \u2502   \u2502   ).shift(LEFT*3 + UP*(i-1)*1.8)                              \u2502\n\u2502   19 \u2502   \u2502   \u2502                                                               \u2502\n\u2502   20 \u2502   \u2502   \u2502   axes.add_coordinates()                                      \u2502\n\u2502 \u2771 21 \u2502   \u2502   \u2502   axes.set_x_axis_config(tip_length=0.15, stroke_width=1)     \u2502\n\u2502   22 \u2502   \u2502   \u2502   axes.set_y_axis_config(tip_length=0.15, stroke_width=1)     \u2502\n\u2502   23 \u2502   \u2502   \u2502                                                               \u2502\n\u2502   24 \u2502   \u2502   \u2502   label = Text(name, font_size=24).next_to(axes, DOWN, buff=0 \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nTypeError: Mobject.__getattr__.<locals>.setter() got an unexpected keyword \nargument 'tip_length'"
+    },
+    {
+      "id": "autoresearch-manim_000026",
+      "pass1_render": false,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 2,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000031",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/mobject/types/vectorized_mobje \u2502\n\u2502 ct.py:2242 in __init__                                                       \u2502\n\u2502                                                                              \u2502\n\u2502   2239 \u2502   \u2502   self, *vmobjects: VMobject | Iterable[VMobject], **kwargs: An \u2502\n\u2502   2240 \u2502   ) -> None:                                                        \u2502\n\u2502   2241 \u2502   \u2502   super().__init__(**kwargs)                                    \u2502\n\u2502 \u2771 2242 \u2502   \u2502   self.add(*vmobjects)                                          \u2502\n\u2502   2243 \u2502                                                                     \u2502\n\u2502   2244 \u2502   def __repr__(self) -> str:                                        \u2502\n\u2502   2245 \u2502   \u2502   return f\"{self.__class__.__name__}({', '.join(str(mob) for mo \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/mobject/types/vectorized_mobje \u2502\n\u2502 ct.py:2352 in add                                                            \u2502\n\u2502                                                                              \u2502\n\u2502   2349 \u2502   \u2502   \u2502   ):                                                        \u2502\n\u2502   2350 \u2502   \u2502   \u2502   \u2502   for j, subvmobject in enumerate(vmobject):            \u2502\n\u2502   2351 \u2502   \u2502   \u2502   \u2502   \u2502   if not isinstance(subvmobject, vmobject_render_ty \u2502\n\u2502 \u2771 2352 \u2502   \u2502   \u2502   \u2502   \u2502   \u2502   raise TypeError(get_type_error_message(subvmo \u2502\n\u2502   2353 \u2502   \u2502   \u2502   \u2502   \u2502   valid_vmobjects.append(subvmobject)               \u2502\n\u2502   2354 \u2502   \u2502   \u2502   elif isinstance(vmobject, Iterable) and isinstance(       \u2502\n\u2502   2355 \u2502   \u2502   \u2502   \u2502   vmobject, (Mobject, OpenGLMobject)                    \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nTypeError: Only values of type VMobject can be added as submobjects of VGroup, \nbut the value np.int64(2) (at index 0 of parameter 0) is of type int64."
+    },
+    {
+      "id": "autoresearch-manim_000036",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp7jo5lxpm/scene_eval.py:40 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   37 \u2502   \u2502   # Animation Sequence                                            \u2502\n\u2502   38 \u2502   \u2502   for i in range(STAGE_COUNT):                                    \u2502\n\u2502   39 \u2502   \u2502   \u2502   target_x = stages[i][0].get_right()[0]                      \u2502\n\u2502 \u2771 40 \u2502   \u2502   \u2502   animation_path = VMob().set_points_as_corners([initial_pos, \u2502\n\u2502   41 \u2502   \u2502   \u2502                                                               \u2502\n\u2502   42 \u2502   \u2502   \u2502   # Move the token smoothly along the path defined by the cur \u2502\n\u2502   43 \u2502   \u2502   \u2502   self.play(                                                  \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'VMob' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000041",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000046",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000051",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": true,
+      "passed_turn": 3,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000056",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000061",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp0hl0yhx8/scene_eval.py:37 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   34 \u2502   \u2502   ))                                                              \u2502\n\u2502   35 \u2502   \u2502                                                                   \u2502\n\u2502   36 \u2502   \u2502   # Area under the curve from start to tracker                    \u2502\n\u2502 \u2771 37 \u2502   \u2502   area = AlwaysUpToCondition(                                     \u2502\n\u2502   38 \u2502   \u2502   \u2502   axes.get_area(graph, x_range=[-PI/2, tracker.get_value()],  \u2502\n\u2502   39 \u2502   \u2502   \u2502   tracker                                                     \u2502\n\u2502   40 \u2502   \u2502   )                                                               \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'AlwaysUpToCondition' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000066",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmpjwfqbn51/scene_eval.py:73 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   70 \u2502   \u2502   \u2502   FadeOut(solid_label),                                       \u2502\n\u2502   71 \u2502   \u2502   \u2502   FadeOut(liquid_label),                                      \u2502\n\u2502   72 \u2502   \u2502   \u2502   FadeOut(gas_label),                                         \u2502\n\u2502 \u2771 73 \u2502   \u2502   \u2502   FullScreenCover(),                                          \u2502\n\u2502   74 \u2502   \u2502   \u2502   run_time=1.5                                                \u2502\n\u2502   75 \u2502   \u2502   )                                                               \u2502\n\u2502   76                                                                         \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'FullScreenCover' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000071",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp8l9hef_4/scene_eval.py:54 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502    51 \u2502   \u2502   \u2502   \u2502   vec_pos = axes.c2p(x, y)                               \u2502\n\u2502    52 \u2502   \u2502   \u2502   \u2502                                                          \u2502\n\u2502    53 \u2502   \u2502   \u2502   \u2502   # Calculate velocity components                        \u2502\n\u2502 \u2771  54 \u2502   \u2502   \u2502   \u2502   u, v = velocity_field(x, y)                            \u2502\n\u2502    55 \u2502   \u2502   \u2502   \u2502                                                          \u2502\n\u2502    56 \u2502   \u2502   \u2502   \u2502   # Determine region index for coloring                  \u2502\n\u2502    57 \u2502   \u2502   \u2502   \u2502   region_index = int((i+j)/2 % len(region_colors))       \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nValueError: too many values to unpack (expected 2)"
+    },
+    {
+      "id": "stress_test_softmax_to_window_attention",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "passed_turn": 0,
+      "error": "\u2502    15 \u2502   \u2502   self.clear_stage()                                             \u2502\n\u2502    16 \u2502   \u2502   self.act_4_window_attention()                                  \u2502\n\u2502    17                                                                        \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmpwmntf1cf/scene_eval.py:129 in act_3_scaled_attention                 \u2502\n\u2502                                                                              \u2502\n\u2502   126 \u2502   \u2502   \u2502   \u2502   rows.append(cells.arrange(RIGHT, buff=0.1))            \u2502\n\u2502   127 \u2502   \u2502   \u2502   return VGroup(rows).arrange(DOWN, buff=0.1)                \u2502\n\u2502   128 \u2502   \u2502                                                                  \u2502\n\u2502 \u2771 129 \u2502   \u2502   q_mat = create_matrix(matrix_data, size=0.8).shift(LEFT * 3.5  \u2502\n\u2502   130 \u2502   \u2502   k_mat = create_matrix([[1, 2], [3, 4]], size=0.8).shift(LEFT * \u2502\n\u2502   131 \u2502   \u2502   v_mat = create_matrix([[1, 2], [3, 4]], size=0.8).shift(LEFT * \u2502\n\u2502   132                                                                        \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmpwmntf1cf/scene_eval.py:122 in create_matrix                          \u2502\n\u2502                                                                              \u2502\n\u2502   119 \u2502   \u2502   \u2502   for row_vals in data:                                      \u2502\n\u2502   120 \u2502   \u2502   \u2502   \u2502   cells = VGroup()                                       \u2502\n\u2502   121 \u2502   \u2502   \u2502   \u2502   for val in row_vals:                                   \u2502\n\u2502 \u2771 122 \u2502   \u2502   \u2502   \u2502   \u2502   cell = RoundRect(height=size*0.8, width=size*0.8,  \u2502\n\u2502   123 \u2502   \u2502   \u2502   \u2502   \u2502   tex = MathTex(str(int(val))).move_to(cell.get_cent \u2502\n\u2502   124 \u2502   \u2502   \u2502   \u2502   \u2502   cells.add(VGroup(cell, tex))                       \u2502\n\u2502   125                                                                        \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'RoundRect' is not defined"
+    }
+  ]
+}
