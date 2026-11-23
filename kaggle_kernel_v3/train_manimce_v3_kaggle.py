@@ -15,6 +15,7 @@ Upgrades over V2:
 """
 
 import ast
+import gc
 import glob
 import json
 import math
@@ -780,7 +781,10 @@ def run_v3_real_render_eval(
                 last_err = None
                 break
             last_err = err
-            msgs = msgs + [
+            # Sliding 1-turn repair context to prevent KV/SDPA prefill OOM on long multi-act scenes
+            msgs = [
+                {"role": "system", "content": SYSTEM_PROMPT_V3},
+                {"role": "user", "content": item["prompt"]},
                 {"role": "assistant", "content": reply},
                 {
                     "role": "user",
@@ -791,6 +795,7 @@ def run_v3_real_render_eval(
                     ),
                 },
             ]
+        torch.cuda.empty_cache()
 
         if passed_turn == 1:
             p1_render_ok += 1
@@ -1056,115 +1061,147 @@ def main() -> None:
         restore_trainable_weights_from_cpu(model, best_weights_cpu)
 
     # =========================================================================
-    # V2 STAGE 2: 16-BIT ADAPTER-REFERENCE DPO (LATEX + ANIMATIVENESS + ZERO TRUNCATION)
+    # V3 STAGE 2: 16-BIT ADAPTER-REFERENCE DPO (EXECUTION-GROUNDED)
     # =========================================================================
     if (time.time() - start_time) / 3600.0 < cfg.max_walltime_hours - 1.2:
-        print("\n[V2 Stage 2] Merging Best V2 16-Bit SFT Adapter into Reference Backbone...", flush=True)
+        print("\n[V3 Stage 2] Merging Best V3 16-Bit SFT Adapter into Reference Backbone...", flush=True)
         for p in model.parameters():
             if p.dtype == torch.float32:
                 p.data = p.data.to(torch.float16)
         base_model = model.merge_and_unload()
-        base_model.config.use_cache = False
-        base_model.enable_input_require_grads()
-        base_model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+        del model
+        gc.collect()
+        torch.cuda.empty_cache()
 
-        dpo_lora = LoraConfig(
-            r=32,
-            lora_alpha=32,
-            lora_dropout=0.05,
-            use_rslora=True,
-            bias="none",
-            task_type="CAUSAL_LM",
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
-        )
-        dpo_model = get_peft_model(base_model, dpo_lora)
-        cast_trainable_lora_to_fp32(dpo_model)
+        dpo_already_done = False
+        if HF_TOKEN:
+            try:
+                api = HfApi(token=HF_TOKEN)
+                dpo_files = api.list_repo_files(repo_id=cfg.hub_dpo_repo, repo_type="model")
+                if "adapter_config.json" in dpo_files and "training_state.json" in dpo_files:
+                    dpo_snap = snapshot_download(repo_id=cfg.hub_dpo_repo, repo_type="model", token=HF_TOKEN)
+                    with open(os.path.join(dpo_snap, "training_state.json"), "r", encoding="utf-8") as f:
+                        dst = json.load(f)
+                    if dst.get("status") == "completed":
+                        dpo_already_done = True
+                        dpo_model = PeftModel.from_pretrained(base_model, dpo_snap, is_trainable=False)
+                        print(f"[V3 Resume] Loaded completed Stage-2 DPO adapter from {cfg.hub_dpo_repo}. Skipping DPO.", flush=True)
+            except Exception:
+                pass
 
-        dpo_rows = load_hub_jsonl(cfg.dpo_dataset_repo, "data/train.jsonl", HF_TOKEN)
-        print(f"[V2 Stage 2 Data] Loaded {len(dpo_rows)} V2 DPO preference pairs.", flush=True)
-        dpo_ds = ManimDPODataset(dpo_rows, tokenizer, max_seq_length=2048)
-        dpo_loader = DataLoader(dpo_ds, batch_size=1, shuffle=True, collate_fn=lambda b: b[0])
+        if not dpo_already_done:
+            base_model.config.use_cache = False
+            base_model.enable_input_require_grads()
+            base_model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
 
-        dpo_accum = 8
-        total_dpo_steps = min(cfg.dpo_max_steps, max(1, len(dpo_loader) // dpo_accum))
-        dpo_params = [p for p in dpo_model.parameters() if p.requires_grad]
-        dpo_opt = torch.optim.AdamW(dpo_params, lr=cfg.dpo_lr, weight_decay=0.01, foreach=False)
-        dpo_sched = get_cosine_schedule_with_warmup(
-            dpo_opt, num_warmup_steps=max(4, int(0.06 * total_dpo_steps)), num_training_steps=total_dpo_steps
-        )
+            dpo_lora = LoraConfig(
+                r=32,
+                lora_alpha=32,
+                lora_dropout=0.05,
+                use_rslora=True,
+                bias="none",
+                task_type="CAUSAL_LM",
+                target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+            )
+            dpo_model = get_peft_model(base_model, dpo_lora)
+            cast_trainable_lora_to_fp32(dpo_model)
 
-        first_dev = next(dpo_model.parameters()).device
-        dpo_model.train()
-        dpo_opt.zero_grad()
+            dpo_rows = load_hub_jsonl(cfg.dpo_dataset_repo, "data/train.jsonl", HF_TOKEN)
+            print(f"[V3 Stage 2 Data] Loaded {len(dpo_rows)} V3 DPO preference pairs.", flush=True)
+            dpo_ds = ManimDPODataset(dpo_rows, tokenizer, max_seq_length=2048)
+            dpo_loader = DataLoader(dpo_ds, batch_size=1, shuffle=True, collate_fn=lambda b: b[0])
 
-        sync_to_hub(
-            dpo_model,
-            tokenizer,
-            cfg.hub_dpo_repo,
-            os.path.join(cfg.output_dir, "dpo_latest"),
-            {"global_step": 0, "status": "v2_dpo_started", "sft_best_val_loss": best_val_loss, "history": []},
-            HF_TOKEN,
-        )
+            dpo_accum = 8
+            total_dpo_steps = min(cfg.dpo_max_steps, max(1, len(dpo_loader) // dpo_accum))
+            dpo_params = [p for p in dpo_model.parameters() if p.requires_grad]
+            dpo_opt = torch.optim.AdamW(dpo_params, lr=cfg.dpo_lr, weight_decay=0.01, foreach=False)
+            dpo_sched = get_cosine_schedule_with_warmup(
+                dpo_opt, num_warmup_steps=max(4, int(0.06 * total_dpo_steps)), num_training_steps=total_dpo_steps
+            )
 
-        dpo_step = 0
-        dpo_micro = 0
-        run_dpo_loss = 0.0
-        run_dpo_acc = 0.0
-        dpo_history: List[Dict[str, Any]] = []
+            first_dev = next(dpo_model.parameters()).device
+            dpo_model.train()
+            dpo_opt.zero_grad()
 
-        for item in dpo_loader:
-            c_ids = item["chosen_input_ids"].unsqueeze(0).to(first_dev)
-            c_lbl = item["chosen_labels"].unsqueeze(0).to(first_dev)
-            r_ids = item["rejected_input_ids"].unsqueeze(0).to(first_dev)
-            r_lbl = item["rejected_labels"].unsqueeze(0).to(first_dev)
+            sync_to_hub(
+                dpo_model,
+                tokenizer,
+                cfg.hub_dpo_repo,
+                os.path.join(cfg.output_dir, "dpo_latest"),
+                {"global_step": 0, "status": "v3_dpo_started", "sft_best_val_loss": best_val_loss, "history": []},
+                HF_TOKEN,
+            )
 
-            with torch.no_grad():
-                with dpo_model.disable_adapter():
-                    ref_c_logp, _ = compute_chunked_dpo_logps(dpo_model, c_ids, c_lbl)
-                    ref_r_logp, _ = compute_chunked_dpo_logps(dpo_model, r_ids, r_lbl)
+            dpo_step = 0
+            dpo_micro = 0
+            run_dpo_loss = 0.0
+            run_dpo_acc = 0.0
+            dpo_history: List[Dict[str, Any]] = []
 
-            pol_c_logp, c_nll = compute_chunked_dpo_logps(dpo_model, c_ids, c_lbl)
-            pol_r_logp, _ = compute_chunked_dpo_logps(dpo_model, r_ids, r_lbl)
+            for item in dpo_loader:
+                c_ids = item["chosen_input_ids"].unsqueeze(0).to(first_dev)
+                c_lbl = item["chosen_labels"].unsqueeze(0).to(first_dev)
+                r_ids = item["rejected_input_ids"].unsqueeze(0).to(first_dev)
+                r_lbl = item["rejected_labels"].unsqueeze(0).to(first_dev)
 
-            margin = cfg.dpo_beta * ((pol_c_logp - pol_r_logp) - (ref_c_logp - ref_r_logp))
-            loss = (-F.logsigmoid(margin).mean() + 0.1 * c_nll) / dpo_accum
-            if not torch.isnan(loss) and not torch.isinf(loss):
-                loss.backward()
-                run_dpo_loss += loss.item()
-                run_dpo_acc += float((margin > 0).float().mean().item()) / dpo_accum
-            dpo_micro += 1
+                with torch.no_grad():
+                    with dpo_model.disable_adapter():
+                        ref_c_logp, _ = compute_chunked_dpo_logps(dpo_model, c_ids, c_lbl)
+                        ref_r_logp, _ = compute_chunked_dpo_logps(dpo_model, r_ids, r_lbl)
 
-            if dpo_micro % dpo_accum == 0:
-                clip_grad_norm_multi_gpu(dpo_params, cfg.max_grad_norm)
-                dpo_opt.step()
-                dpo_sched.step()
-                dpo_opt.zero_grad()
-                dpo_step += 1
+                pol_c_logp, c_nll = compute_chunked_dpo_logps(dpo_model, c_ids, c_lbl)
+                pol_r_logp, _ = compute_chunked_dpo_logps(dpo_model, r_ids, r_lbl)
 
-                if dpo_step % 5 == 0:
-                    avg_dl = run_dpo_loss / 5.0
-                    avg_acc = (run_dpo_acc / 5.0) * 100.0
-                    run_dpo_loss = 0.0
-                    run_dpo_acc = 0.0
-                    print(f"  [V2 DPO Step {dpo_step:4d}/{total_dpo_steps:4d}] Loss: {avg_dl:.4f} | Pref Acc: {avg_acc:.1f}%", flush=True)
-                    dpo_history.append({"step": dpo_step, "dpo_loss": round(avg_dl, 5), "pref_acc": round(avg_acc, 2)})
+                margin = cfg.dpo_beta * ((pol_c_logp - pol_r_logp) - (ref_c_logp - ref_r_logp))
+                loss = (-F.logsigmoid(margin).mean() + 0.1 * c_nll) / dpo_accum
+                if not torch.isnan(loss) and not torch.isinf(loss):
+                    loss.backward()
+                    run_dpo_loss += loss.item()
+                    run_dpo_acc += float((margin > 0).float().mean().item()) / dpo_accum
+                dpo_micro += 1
 
-                if dpo_step % 20 == 0 or dpo_step >= total_dpo_steps:
-                    st = {
-                        "global_step": dpo_step,
-                        "sft_best_val_loss": best_val_loss,
-                        "status": "completed" if dpo_step >= total_dpo_steps else "in_progress",
-                        "history": dpo_history,
-                    }
-                    sync_to_hub(dpo_model, tokenizer, cfg.hub_dpo_repo, os.path.join(cfg.output_dir, "dpo_latest"), st, HF_TOKEN)
+                if dpo_micro % dpo_accum == 0:
+                    clip_grad_norm_multi_gpu(dpo_params, cfg.max_grad_norm)
+                    dpo_opt.step()
+                    dpo_sched.step()
+                    dpo_opt.zero_grad()
+                    dpo_step += 1
 
-                if dpo_step >= total_dpo_steps or (time.time() - start_time) / 3600.0 >= cfg.max_walltime_hours - 0.8:
-                    break
+                    if dpo_step % 5 == 0:
+                        avg_dl = run_dpo_loss / 5.0
+                        avg_acc = (run_dpo_acc / 5.0) * 100.0
+                        run_dpo_loss = 0.0
+                        run_dpo_acc = 0.0
+                        print(f"  [V3 DPO Step {dpo_step:4d}/{total_dpo_steps:4d}] Loss: {avg_dl:.4f} | Pref Acc: {avg_acc:.1f}%", flush=True)
+                        dpo_history.append({"step": dpo_step, "dpo_loss": round(avg_dl, 5), "pref_acc": round(avg_acc, 2)})
+
+                    if dpo_step % 20 == 0 or dpo_step >= total_dpo_steps:
+                        st = {
+                            "global_step": dpo_step,
+                            "sft_best_val_loss": best_val_loss,
+                            "status": "completed" if dpo_step >= total_dpo_steps else "in_progress",
+                            "history": dpo_history,
+                        }
+                        sync_to_hub(dpo_model, tokenizer, cfg.hub_dpo_repo, os.path.join(cfg.output_dir, "dpo_latest"), st, HF_TOKEN)
+
+                    if dpo_step >= total_dpo_steps or (time.time() - start_time) / 3600.0 >= cfg.max_walltime_hours - 0.8:
+                        break
+
+            del dpo_opt, dpo_sched, dpo_params
+
+        # Free all training/optimizer/adapter overhead before Stage 3 MP4 rendering
+        for p in dpo_model.parameters():
+            if p.dtype == torch.float32:
+                p.data = p.data.to(torch.float16)
+        eval_model = dpo_model.merge_and_unload()
+        del dpo_model
+        gc.collect()
+        torch.cuda.empty_cache()
 
         # =====================================================================
         # V3 STAGE 3: REAL HEADLESS MANIM + LATEX VIDEO RENDERING BENCHMARK
         # =====================================================================
-        eval_summary = run_v3_real_render_eval(dpo_model, tokenizer, cfg, max_cases=15, max_ritl_turns=3)
+        eval_summary = run_v3_real_render_eval(eval_model, tokenizer, cfg, max_cases=15, max_ritl_turns=3)
         print("\n=== V3 STAGE 3 REAL MANIM RENDER EVAL SUMMARY ===", flush=True)
         print(json.dumps({k: v for k, v in eval_summary.items() if k != "details"}, indent=2), flush=True)
 
