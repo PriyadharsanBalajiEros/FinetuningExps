@@ -1,0 +1,52 @@
+{
+  "global_step": 46,
+  "sft_best_val_loss": 0.42649819776415826,
+  "status": "completed",
+  "history": [
+    {
+      "step": 5,
+      "dpo_loss": 0.72824,
+      "pref_acc": 37.5
+    },
+    {
+      "step": 10,
+      "dpo_loss": 0.70503,
+      "pref_acc": 77.5
+    },
+    {
+      "step": 15,
+      "dpo_loss": 0.67151,
+      "pref_acc": 87.5
+    },
+    {
+      "step": 20,
+      "dpo_loss": 0.64358,
+      "pref_acc": 77.5
+    },
+    {
+      "step": 25,
+      "dpo_loss": 0.54475,
+      "pref_acc": 92.5
+    },
+    {
+      "step": 30,
+      "dpo_loss": 0.53725,
+      "pref_acc": 95.0
+    },
+    {
+      "step": 35,
+      "dpo_loss": 0.5136,
+      "pref_acc": 97.5
+    },
+    {
+      "step": 40,
+      "dpo_loss": 0.5444,
+      "pref_acc": 97.5
+    },
+    {
+      "step": 45,
+      "dpo_loss": 0.55123,
+      "pref_acc": 90.0
+    }
+  ]
+}

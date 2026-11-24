@@ -19,8 +19,8 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 def push_and_verify_kaggle_kernel(
     kaggle_token: str,
     hf_token: str,
-    kernel_src_dir: str = "kaggle_kernel_v4",
-    build_dir: str = "outputs/kaggle_build_v4",
+    kernel_src_dir: str = "kaggle_kernel_v5",
+    build_dir: str = "outputs/kaggle_build_v5",
 ) -> None:
     os.environ["KAGGLE_API_TOKEN"] = kaggle_token
     os.makedirs(build_dir, exist_ok=True)

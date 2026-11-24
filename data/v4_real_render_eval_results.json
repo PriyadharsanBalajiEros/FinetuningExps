@@ -1,0 +1,153 @@
+{
+  "num_cases": 16,
+  "pass1_real_mp4_render_pct": 12.5,
+  "pass2_ritl_real_mp4_render_pct": 31.25,
+  "pass3_ritl_real_mp4_render_pct": 37.5,
+  "pass5_ritl_real_mp4_render_pct": 50.0,
+  "details": [
+    {
+      "id": "autoresearch-manim_000001",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000006",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 3,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000011",
+      "pass1_render": false,
+      "pass2_render": true,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 2,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000016",
+      "pass1_render": true,
+      "pass2_render": true,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 1,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000021",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "SyntaxError: unindent does not match any outer indentation level (line 19)"
+    },
+    {
+      "id": "autoresearch-manim_000026",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp4agkr7lt/scene_eval.py:15 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   12 \u2502   \u2502                                                                   \u2502\n\u2502   13 \u2502   \u2502   for i, element in enumerate(elements):                          \u2502\n\u2502   14 \u2502   \u2502   \u2502   dot = Circle(radius=0.4, color=colors[i], fill_opacity=0.8) \u2502\n\u2502 \u2771 15 \u2502   \u2502   \u2502   label_text = MathText(element + r\"\\quad ($r_{\\text{atomic}} \u2502\n\u2502   16 \u2502   \u2502   \u2502                                                               \u2502\n\u2502   17 \u2502   \u2502   \u2502   # Arrange them horizontally centered at zero                \u2502\n\u2502   18 \u2502   \u2502   \u2502   x_pos = i * (-1.5 * 0.4)                                    \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'MathText' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000031",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "SyntaxError: iterable unpacking cannot be used in comprehension (line 88)"
+    },
+    {
+      "id": "autoresearch-manim_000036",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp4424jzem/scene_eval.py:18 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   15 \u2502   \u2502                                                                   \u2502\n\u2502   16 \u2502   \u2502   for i in range(len(stage_labels)):                              \u2502\n\u2502   17 \u2502   \u2502   \u2502   box = RoundedRectangle(corner_radius=0.3, width=2.5, height \u2502\n\u2502 \u2771 18 \u2502   \u2502   \u2502   label = MathText(f\"Stage {i + 1}\", color=YELLOW, font_size= \u2502\n\u2502   19 \u2502   \u2502   \u2502                                                               \u2502\n\u2502   20 \u2502   \u2502   \u2502   if i == 0:                                                  \u2502\n\u2502   21 \u2502   \u2502   \u2502   \u2502   box.move_to([-(len(stage_labels)-1)*1.2, 0, 0])         \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'MathText' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000041",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmpigtvgsat/scene_eval.py:27 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502   24 \u2502   \u2502   dots = []                                                       \u2502\n\u2502   25 \u2502   \u2502   for angle in [PI/6, PI/4, PI/3]:                                \u2502\n\u2502   26 \u2502   \u2502   \u2502   dot_pos = np.array([                                        \u2502\n\u2502 \u2771 27 \u2502   \u2502   \u2502   \u2502   math.cos(angle),                                        \u2502\n\u2502   28 \u2502   \u2502   \u2502   \u2502   math.sin(angle),                                        \u2502\n\u2502   29 \u2502   \u2502   \u2502   \u2502   0                                                       \u2502\n\u2502   30 \u2502   \u2502   \u2502   ])                                                          \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'math' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000046",
+      "pass1_render": false,
+      "pass2_render": true,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 2,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000051",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": true,
+      "passed_turn": 4,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000056",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": true,
+      "passed_turn": 4,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000061",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmp9v1tqcjh/scene_eval.py:28 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502    25 \u2502   \u2502                                                                  \u2502\n\u2502    26 \u2502   \u2502   # Create the path along which the point will move              \u2502\n\u2502    27 \u2502   \u2502   path = VMobject()                                              \u2502\n\u2502 \u2771  28 \u2502   \u2502   path.set_points_as_corners([func(start), func(end)])           \u2502\n\u2502    29 \u2502   \u2502                                                                  \u2502\n\u2502    30 \u2502   \u2502   # Add labels                                                   \u2502\n\u2502    31 \u2502   \u2502   title = Text(\"A Point Moves Along a Curve\", font_size=24).to_e \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'start' is not defined"
+    },
+    {
+      "id": "autoresearch-manim_000066",
+      "pass1_render": false,
+      "pass2_render": true,
+      "pass3_render": true,
+      "pass5_render": true,
+      "passed_turn": 2,
+      "error": null
+    },
+    {
+      "id": "autoresearch-manim_000071",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "\u2502   156 \u2502   \u2502   except EndSceneEarlyException:                                 \u2502\n\u2502   157 \u2502   \u2502   \u2502   # Reaching the configured animation boundary ends the scen \u2502\n\u2502   158 \u2502   \u2502   \u2502   pass                                                       \u2502\n\u2502                                                                              \u2502\n\u2502 /usr/local/lib/python3.13/dist-packages/manim/manager.py:193 in construct    \u2502\n\u2502                                                                              \u2502\n\u2502   190 \u2502                                                                      \u2502\n\u2502   191 \u2502   def construct(self) -> None:                                       \u2502\n\u2502   192 \u2502   \u2502   \"\"\"Run the managed scene's :meth:`~manim.scene.scene.Scene.con \u2502\n\u2502 \u2771 193 \u2502   \u2502   self.scene.construct()                                         \u2502\n\u2502   194 \u2502                                                                      \u2502\n\u2502   195 \u2502   def post_construct(self) -> None:                                  \u2502\n\u2502   196 \u2502   \u2502   \"\"\"Finalize output after scene construction and tear-down.     \u2502\n\u2502                                                                              \u2502\n\u2502 /tmp/tmpvvwm8h_f/scene_eval.py:50 in construct                               \u2502\n\u2502                                                                              \u2502\n\u2502    47 \u2502   \u2502   \u2502   \u2502   vectors.add(vec)                                       \u2502\n\u2502    48 \u2502   \u2502                                                                  \u2502\n\u2502    49 \u2502   \u2502   # Display labels indicating specific physical characteristics  \u2502\n\u2502 \u2771  50 \u2502   \u2502   label_left = MathText(\"\\\\text{Left Region} \\\\rightarrow \\\\\\\\ \\ \u2502\n\u2502    51 \u2502   \u2502   box_left = SurroundingRectangle(label_left, corner_radius=0.15 \u2502\n\u2502    52 \u2502   \u2502   group_left = VGroup(box_left, label_left)                      \u2502\n\u2502    53                                                                        \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nNameError: name 'MathText' is not defined"
+    },
+    {
+      "id": "stress_test_softmax_to_window_attention",
+      "pass1_render": false,
+      "pass2_render": false,
+      "pass3_render": false,
+      "pass5_render": false,
+      "passed_turn": 0,
+      "error": "SyntaxError: unindent does not match any outer indentation level (line 278)"
+    }
+  ]
+}
